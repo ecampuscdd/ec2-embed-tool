@@ -35,29 +35,49 @@ function getIDFromLink(link) {
 
 function getEmbedCode(id) {
   function changeTimeFormat(isoDuration) {
-    let hoursPattern = /([0-9]*)H/;
-    let minutesPattern = /([0-9]*)M/;
-    let secondsPattern = /([0-9]*)S/;
-
-    function makeString(unit) {
-      let timeString = '';
-      if (unit == null) timeString = '00';
-      else if (unit[1].length == 1) timeString = '0' + unit[1];
-      else timeString = unit[1];
-      return timeString;
+    let [_, hours, minutes, seconds] = /PT(\d{1,2}H)?(\d{1,2}M)?(\d{1,2}S)?/.exec(isoDuration);
+    function changeUnit(unit) {
+      if (unit) {
+        unit = unit.slice(0, -1);
+        if (unit.length == 1) unit = unit.padStart(2, '0');
+      }
+      else unit = '00';
+      return unit;
     }
-
-    let hoursString = makeString(hoursPattern.exec(isoDuration));
-    let minutesString = makeString(minutesPattern.exec(isoDuration));
-    let secondsString = makeString(secondsPattern.exec(isoDuration));
-
-    if (hoursString != '00') {
-      return time = hoursString + ':' + minutesString + ':' + secondsString + ' hrs.'
+    hours = changeUnit(hours);
+    minutes = changeUnit(minutes);
+    seconds = changeUnit(seconds);
+    if (hours != '00') {
+      return `${hours}:${minutes}:${seconds} hrs.`;
     }
     else {
-      return time = minutesString + ':' + secondsString + ' min.';
+      return `${minutes}:${seconds} min.`;
     }
   }
+  // function changeTimeFormat(isoDuration) {
+  //   let hoursPattern = /([0-9]*)H/;
+  //   let minutesPattern = /([0-9]*)M/;
+  //   let secondsPattern = /([0-9]*)S/;
+
+  //   function makeString(unit) {
+  //     let timeString = '';
+  //     if (unit == null) timeString = '00';
+  //     else if (unit[1].length == 1) timeString = '0' + unit[1];
+  //     else timeString = unit[1];
+  //     return timeString;
+  //   }
+
+  //   let hoursString = makeString(hoursPattern.exec(isoDuration));
+  //   let minutesString = makeString(minutesPattern.exec(isoDuration));
+  //   let secondsString = makeString(secondsPattern.exec(isoDuration));
+
+  //   if (hoursString != '00') {
+  //     return time = hoursString + ':' + minutesString + ':' + secondsString + ' hrs.'
+  //   }
+  //   else {
+  //     return time = minutesString + ':' + secondsString + ' min.';
+  //   }
+  // }
 
   let options = {
     part: 'snippet,contentDetails',
