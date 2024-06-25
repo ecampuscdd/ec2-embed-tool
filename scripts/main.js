@@ -94,8 +94,8 @@ function getEmbedCode(id) {
       try {
         let title = data.items[0].snippet.title;
         let duration = changeTimeFormat(data.items[0].contentDetails.duration);
-        let embedCode = `<p>Click the <strong>Play</strong> icon to begin.</p>
-<p><iframe width="560" height="315" src="https://www.youtube.com/embed/${videoID}${videoTimeEmbed}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+        //   let embedCode = `<p>Click the <strong>Play</strong> icon to begin.</p>  // "Click play" words were removed ~6/25/24 TM
+        let embedCode = <p><iframe width="560" height="315" src="https://www.youtube.com/embed/${videoID}${videoTimeEmbed}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
 <p>If the video doesn't appear, follow this direct link: <a class="inline_disabled" href="https://youtu.be/${videoID}${videoTimeLink}" target="_blank" rel="noopener">${title}</a> (${duration})</p>
 <p>Use the direct link above to open the video in YouTube to display the video captions, expand the video, and navigate the video using the transcript.</p>`;
         textArea.value = embedCode;
