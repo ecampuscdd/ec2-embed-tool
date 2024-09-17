@@ -54,30 +54,15 @@ function getEmbedCode(id) {
       return `${minutes}:${seconds} min.`;
     }
   }
-  // function changeTimeFormat(isoDuration) {
-  //   let hoursPattern = /([0-9]*)H/;
-  //   let minutesPattern = /([0-9]*)M/;
-  //   let secondsPattern = /([0-9]*)S/;
-
-  //   function makeString(unit) {
-  //     let timeString = '';
-  //     if (unit == null) timeString = '00';
-  //     else if (unit[1].length == 1) timeString = '0' + unit[1];
-  //     else timeString = unit[1];
-  //     return timeString;
-  //   }
-
-  //   let hoursString = makeString(hoursPattern.exec(isoDuration));
-  //   let minutesString = makeString(minutesPattern.exec(isoDuration));
-  //   let secondsString = makeString(secondsPattern.exec(isoDuration));
-
-  //   if (hoursString != '00') {
-  //     return time = hoursString + ':' + minutesString + ':' + secondsString + ' hrs.'
-  //   }
-  //   else {
-  //     return time = minutesString + ':' + secondsString + ' min.';
-  //   }
-  // }
+  function formatDate(isoDate) {
+    const date = new Date(isoDate);
+    const options = {
+      month: 'long', // Use full month names (e.g., January)
+      day: 'numeric',
+      year: 'numeric'
+    };
+    return date.toLocaleDateString('en-US', options); // Adjust locale if needed
+  }
 
   let options = {
     part: 'snippet,contentDetails',
@@ -93,7 +78,7 @@ function getEmbedCode(id) {
     try {
       let title = data.items[0].snippet.title;
       let duration = changeTimeFormat(data.items[0].contentDetails.duration);
-      let uploadDate = data.items[0].snippet.publishedAt; // Get upload date
+      let uploadDate = formatDate(data.items[0].snippet.publishedAt); // Get upload date and format it to en-US standard
       let channelTitle = data.items[0].snippet.channelTitle; // Get channel title
 
       // Use the retrieved data to create the embed code
@@ -102,7 +87,7 @@ function getEmbedCode(id) {
         <p>If the video doesn't appear, follow this direct link: <a class="inline_disabled" href="https://youtu.be/${videoID}${videoTimeLink}" target="_blank" rel="noopener">${title}</a> (${duration})</p>
         <p>Use the direct link above to open the video in YouTube to display the video captions, expand the video, and navigate the video using the transcript.</p>
         
-        <p>Uploaded: ${uploadDate} by ${channelTitle}</p>
+        <p>Video Uploaded: ${uploadDate} by ${channelTitle}</p>
       `;
       textArea.value = embedCode;
       $( "div.preview" ).html ( embedCode );
