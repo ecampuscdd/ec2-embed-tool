@@ -99,10 +99,10 @@ function getEmbedCode(id) {
       // Use the retrieved data to create the embed code
       let embedCode = `
         <p><iframe width="560" height="315" src="https://www.youtube.com/embed/${videoID}${videoTimeEmbed}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
-        <p>If   
- the video doesn't appear, follow this direct link: <a class="inline_disabled" href="https://youtu.be/${videoID}${videoTimeLink}" target="_blank" rel="noopener">${title}</a> (${duration})</p>
-        <p>Uploaded: ${uploadDate} by ${channelTitle}</p>
+        <p>If the video doesn't appear, follow this direct link: <a class="inline_disabled" href="https://youtu.be/${videoID}${videoTimeLink}" target="_blank" rel="noopener">${title}</a> (${duration})</p>
         <p>Use the direct link above to open the video in YouTube to display the video captions, expand the video, and navigate the video using the transcript.</p>
+        
+        <p>Uploaded: ${uploadDate} by ${channelTitle}</p>
       `;
       textArea.value = embedCode;
       $( "div.preview" ).html ( embedCode );
