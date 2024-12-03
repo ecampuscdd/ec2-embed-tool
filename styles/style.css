@@ -8,7 +8,6 @@ body {
   padding: 15px;
   width: 800px;
   margin: 0 auto;
-  text-align: center;
 }
 
 h1, h2 {
@@ -19,37 +18,49 @@ h1, h2 {
   text-align: left;
 }
 
-div {
-  margin: 0 0 1em 0;
+.transcriptWords{
+	width: 120px;
+	justify-content:left;
+	text-align:center;
 }
+.flexline {
+  display: flex;
+  justify-content: space-between;
 
-label {
-  display: inline-block;
-  width: 150px;
-  text-align: right;
-}
-
-input {
   padding: 5px;
-  width: 600px;
+
+}
+.inlineLeft {
+  width: 175px;
+  justify-content:left;
+  align-items:center;"
+}
+input.input_text {
+  padding: 5px;
+  width: 500px;
   margin: 3px;
 }
 
-button {
+button{
   background-color: #999;
   border-radius: 5px;
   padding: 5px;
   font-weight: bold;
   color: #fff;
-  width: 150px;
+  width: 800px;
+  justify-content:right;
 }
 
 button:hover {
   background-color: #333;
 }
+radio:hover {
+  background-color: #333;
+    border: 1px solid rgb(126, 126, 126);
 
+}
 textarea {
-  width: 600px;
+  width: 516px;
   vertical-align: top;
   margin: 3px;
 }
