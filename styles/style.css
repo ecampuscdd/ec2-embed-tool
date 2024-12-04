@@ -1,7 +1,23 @@
+.flexline {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 5px;
+
+}
+.inlineLeft {
+  width: 175px;
+  justify-content:left;
+  align-items:center;"
+}
 body {
   font-family: 'lato', serif;
 }
-
+.transcriptWords{
+	width: 120px;
+	justify-content:left;
+	text-align:center;
+}
 .content {
   border: 1px solid rgb(126, 126, 126);
   border-radius: 5px;
@@ -29,9 +45,9 @@ label {
   text-align: right;
 }
 
-input {
+input.input_text {
   padding: 5px;
-  width: 600px;
+  width: 500px;
   margin: 3px;
 }
 
@@ -41,15 +57,21 @@ button {
   padding: 5px;
   font-weight: bold;
   color: #fff;
-  width: 150px;
+  width: 800px;
+  justify-content:right;
 }
 
 button:hover {
   background-color: #333;
 }
 
+radio:hover {
+  background-color: #333;
+    border: 1px solid rgb(126, 126, 126);
+}
+
 textarea {
-  width: 600px;
+  width: 516px;
   vertical-align: top;
   margin: 3px;
 }
