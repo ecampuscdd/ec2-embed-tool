@@ -72,7 +72,7 @@ function getEmbedCode(id) {
 	part: 'snippet,contentDetails', // Specify parts you need
 	key: key,
 	id: id, // Video ID
-  };
+  });
 
    try {
     const response = await fetch(`${URL}?${params}`);
