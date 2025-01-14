@@ -14,29 +14,37 @@ let URL = 'https://www.googleapis.com/youtube/v3/videos';
 
 mainForm.onsubmit = function () {
   try {
-    videoID = getIDFromLink(videoLink.value)[1];
-    console.log(videoID);
-    if (getIDFromLink(videoLink.value)[2]) videoTimeEmbed = `?start=${getIDFromLink(videoLink.value)[2]}`, videoTimeLink = `?t=${getIDFromLink(videoLink.value)[2]}`;
-    else videoTimeEmbed = '', videoTimeLink = '';
+    let idMatch = getIDFromLink(videoLink.value);
+    if (!idMatch) throw new Error("Invalid YouTube link.");
+    videoID = idMatch[1];
+    console.log("Extracted Video ID:", videoID);
+
+    if (idMatch[2]) {
+      videoTimeEmbed = `?start=${idMatch[2]}`;
+      videoTimeLink = `?t=${idMatch[2]}`;
+    } else {
+      videoTimeEmbed = '';
+      videoTimeLink = '';
+    }
     getEmbedCode(videoID);
-  } catch(e) {
-    $( "div.preview" ).html ( `<p>Please enter a valid YouTube link.</p>` );
-	textArea.value = 'Please enter a valid YouTube link.';
+  } catch (e) {
+    console.error("Error:", e.message);
+    $("div.preview").html(`<p>${e.message}</p>`);
+    textArea.value = e.message;
   }
   return false;
-}
+};
 
 function getIDFromLink(link) {
   try {
     let linkPattern = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:.*t=([0-9]+))?/;
     return linkPattern.exec(link);
-  } catch(e) {
-    $( "div.preview" ).html ( `<p>Please enter a valid YouTube link.</p>` );
-    textArea.value = 'Please enter a valid YouTube link.';
+  } catch (e) {
+    console.error("Error in getIDFromLink:", e.message);
+    return null;
   }
 }
 
-function getEmbedCode(id) {
   function changeTimeFormat(isoDuration) {
     let [_, hours, minutes, seconds] = /PT(\d{1,2}H)?(\d{1,2}M)?(\d{1,2}S)?/.exec(isoDuration);
     function changeUnit(unit) {
@@ -67,17 +75,20 @@ function getEmbedCode(id) {
     return date.toLocaleDateString('en-US', options); // Adjust locale if needed
   }
 
-  async function getVideoDetails() {
+async function getEmbedCode(id) {
   const params = new URLSearchParams({
-	part: 'snippet,contentDetails', // Specify parts you need
-	key: key,
-	id: id, // Video ID
+    part: 'snippet,contentDetails',
+    key: key,
+    id: id,
   });
-
-   try {
+  	console.log("getEmbedCode Function");
+  try {
     const response = await fetch(`${URL}?${params}`);
-    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+    if (!response.ok) throw new Error(`API Request Failed: ${response.statusText}`);
+
     const data = await response.json();
+    if (data.items.length === 0) throw new Error("No video found with the provided ID.");
+
     console.log("API Response:", data);
 	   
 		let title = data.items[0].snippet.title;
@@ -107,10 +118,9 @@ function getEmbedCode(id) {
       let embedCode = `<h3>Video: "${title}"</h3><p><iframe name="videoIframe" width="560" height="315" src="https://www.youtube.com/embed/${videoID}${videoTimeEmbed}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p><p>If the video doesn't appear, follow this direct link: <a class="inline_disabled" href="https://youtu.be/${videoID}${videoTimeLink}" target="_blank" rel="noopener">${title}</a> (${duration})</p>${transcriptOption}<p>Video uploaded: ${uploadDate} by ${channelTitle}.</p>`;
       textArea.value = embedCode;
       $( "div.preview" ).html (`<hr>`+embedCode );
-    } catch(error) {
-	       console.error("Error fetching video details:", error);
-      $( "div.preview" ).html ( `<p>Cannot get embed code.</p>` );
-      textArea.value = 'Cannot get embed code.'
-    }
+} catch (error) {
+    console.error("Error fetching video details:", error.message);
+    $("div.preview").html(`<p>${error.message}</p>`);
+    textArea.value = error.message;
   }
-}
+  }
