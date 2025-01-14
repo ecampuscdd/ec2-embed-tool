@@ -10,7 +10,7 @@ let videoTimeLink = '';
 let radioValue = '';
 
 let key = 'AIzaSyDoZv3STqommSilzzIHDPcPRjv34cHXb_Q';
-let URL = 'https://youtube.googleapis.com/youtube/v3/videos';
+let URL = 'https://www.googleapis.com/youtube/v3/videos';
 
 mainForm.onsubmit = function () {
   try {
@@ -67,19 +67,19 @@ function getEmbedCode(id) {
     return date.toLocaleDateString('en-US', options); // Adjust locale if needed
   }
 
-  let options = {
+  async function getVideoDetails() {
+  const params = new URLSearchParams({
 	part: 'snippet,contentDetails', // Specify parts you need
 	key: key,
 	id: id, // Video ID
   };
 
-  getVideoDetails();
-
-  //Possibly should use Fetch instead? https://stackoverflow.com/a/43175774
- function getVideoDetails () {
-  $.getJSON(URL, options, function(data) {
-	  console.log("API Response:", data);
-    try {
+   try {
+    const response = await fetch(`${URL}?${params}`);
+    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+    const data = await response.json();
+    console.log("API Response:", data);
+	   
 		let title = data.items[0].snippet.title;
 		let duration = changeTimeFormat(data.items[0].contentDetails.duration);
 		let uploadDate = formatDate(data.items[0].snippet.publishedAt); // Get upload date and format it to en-US standard
@@ -107,13 +107,12 @@ function getEmbedCode(id) {
       let embedCode = `<h3>Video: "${title}"</h3><p><iframe name="videoIframe" width="560" height="315" src="https://www.youtube.com/embed/${videoID}${videoTimeEmbed}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p><p>If the video doesn't appear, follow this direct link: <a class="inline_disabled" href="https://youtu.be/${videoID}${videoTimeLink}" target="_blank" rel="noopener">${title}</a> (${duration})</p>${transcriptOption}<p>Video uploaded: ${uploadDate} by ${channelTitle}.</p>`;
       textArea.value = embedCode;
       $( "div.preview" ).html (`<hr>`+embedCode );
-    } catch(e) {
+    } catch(error) {
+	       console.error("Error fetching video details:", error);
       $( "div.preview" ).html ( `<p>Cannot get embed code.</p>` );
       textArea.value = 'Cannot get embed code.'
     }
-  }).fail(function(jqXHR, textStatus, errorThrown) {
-  console.error("API Request Failed:", textStatus, errorThrown);
-});
+  }
 }
 
 }
