@@ -15,7 +15,7 @@ let URL = 'https://youtube.googleapis.com/youtube/v3/videos';
 mainForm.onsubmit = function () {
   try {
     videoID = getIDFromLink(videoLink.value)[1];
-    console.log(getIDFromLink(videoLink.value)[0]);
+    console.log(videoID);
     if (getIDFromLink(videoLink.value)[2]) videoTimeEmbed = `?start=${getIDFromLink(videoLink.value)[2]}`, videoTimeLink = `?t=${getIDFromLink(videoLink.value)[2]}`;
     else videoTimeEmbed = '', videoTimeLink = '';
     getEmbedCode(videoID);
