@@ -9,7 +9,7 @@ let videoTimeEmbed = '';
 let videoTimeLink = '';
 let radioValue = '';
 
-let key = 'AIzaSyDv1p9Yae1_42wMx_jivmfiGhoBPzVKElk';
+let key = 'AIzaSyDoZv3STqommSilzzIHDPcPRjv34cHXb_Q';
 let URL = 'https://youtube.googleapis.com/youtube/v3/videos';
 
 mainForm.onsubmit = function () {
@@ -28,8 +28,8 @@ mainForm.onsubmit = function () {
 
 function getIDFromLink(link) {
   try {
-  let linkPattern = /(?:https:\/\/www.youtube.com\/watch\?v=|https:\/\/youtu.be\/)([a-zA-Z0-9._%+-]+)(?:\?t=([0-9]+))?/;
-  return linkPattern.exec(link);
+    let linkPattern = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:.*t=([0-9]+))?/;
+    return linkPattern.exec(link);
   } catch(e) {
     $( "div.preview" ).html ( `<p>Please enter a valid YouTube link.</p>` );
     textArea.value = 'Please enter a valid YouTube link.';
@@ -68,16 +68,17 @@ function getEmbedCode(id) {
   }
 
   let options = {
-    part: 'snippet,contentDetails',
-    key: key,
-    id: id
-  }
+	part: 'snippet,contentDetails', // Specify parts you need
+	key: key,
+	id: id, // Video ID
+  };
 
   getVideoDetails();
 
   //Possibly should use Fetch instead? https://stackoverflow.com/a/43175774
  function getVideoDetails () {
   $.getJSON(URL, options, function(data) {
+	  console.log("API Response:", data);
     try {
 		let title = data.items[0].snippet.title;
 		let duration = changeTimeFormat(data.items[0].contentDetails.duration);
@@ -110,7 +111,9 @@ function getEmbedCode(id) {
       $( "div.preview" ).html ( `<p>Cannot get embed code.</p>` );
       textArea.value = 'Cannot get embed code.'
     }
-  })
+  }).fail(function(jqXHR, textStatus, errorThrown) {
+  console.error("API Request Failed:", textStatus, errorThrown);
+});
 }
 
 }
